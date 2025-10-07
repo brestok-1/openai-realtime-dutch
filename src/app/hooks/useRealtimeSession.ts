@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {OpenAIRealtimeWebRTC, RealtimeAgent, RealtimeSession,} from '@openai/agents/realtime';
 
-import {applyCodecPreferences, audioFormatForCodec} from '../lib/codecUtils';
 import {useEvent} from '../contexts/EventContext';
 import {useHandleSessionHistory} from './useHandleSessionHistory';
 import {SessionStatus} from '../types';
@@ -61,19 +60,6 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
     }
   }
 
-  const codecParamRef = useRef<string>(
-    (typeof window !== 'undefined'
-      ? (new URLSearchParams(window.location.search).get('codec') ?? 'opus')
-      : 'opus')
-      .toLowerCase(),
-  );
-
-  // Wrapper to pass current codec param
-  const applyCodec = useCallback(
-    (pc: RTCPeerConnection) => applyCodecPreferences(pc, codecParamRef.current),
-    [],
-  );
-
   const handleAgentHandoff = (item: any) => {
     const history = item.context.history;
     const lastMessage = history[history.length - 1];
@@ -109,8 +95,6 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
       getEphemeralKey,
       initialAgents,
       audioElement,
-      extraContext,
-      outputGuardrails,
     }: ConnectOptions) => {
       if (sessionRef.current) return; // already connected
 
@@ -121,9 +105,6 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
 
       // This lets you use the codec selector in the UI to force narrow-band (8 kHz) codecs to
       //  simulate how the voice agent sounds over a PSTN/SIP phone call.
-      const codecParam = codecParamRef.current;
-      const audioFormat = audioFormatForCodec(codecParam);
-
       sessionRef.current = new RealtimeSession(rootAgent, {
         transport: new OpenAIRealtimeWebRTC({
           audioElement,
