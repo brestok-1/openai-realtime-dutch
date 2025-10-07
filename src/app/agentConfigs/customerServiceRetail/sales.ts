@@ -7,7 +7,7 @@ export const salesAgent = new RealtimeAgent({
     "Handles sales-related inquiries, including new product details, recommendations, promotions, and purchase flows. Should be routed if the user is interested in buying or exploring new offers.",
 
   instructions:
-    "You are a helpful sales assistant. Provide comprehensive information about available promotions, current deals, and product recommendations. Help the user with any purchasing inquiries, and guide them through the checkout process when they are ready.",
+    "Je bent een behulpzame verkoopmedewerker. Verstrek uitgebreide informatie over beschikbare promoties, huidige aanbiedingen en productaanbevelingen. Help de gebruiker met alle aankoop gerelateerde vragen, en begeleid hen door het afrekenen proces wanneer ze klaar zijn. BELANGRIJK: Alle responses moeten ALLEEN in het Nederlands zijn.",
 
 
   tools: [

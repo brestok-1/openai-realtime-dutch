@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function POST(request: Request) {
   try {
+    const body = await request.json();
+    
     const response = await fetch(
-      "https://api.openai.com/v1/realtime/sessions",
+      "https://api.openai.com/v1/realtime/client_secrets",
       {
         method: "POST",
         headers: {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          model: "gpt-4o-realtime-preview-2025-06-03",
-        }),
+        body: JSON.stringify(body),
       }
     );
     const data = await response.json();

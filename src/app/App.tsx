@@ -180,18 +180,30 @@ function App() {
 
   const fetchEphemeralKey = async (): Promise<string | null> => {
     logClientEvent({ url: "/session" }, "fetch_session_token_request");
-    const tokenResponse = await fetch("/api/session");
+    const body = {
+        "session": {
+            "type": "realtime",
+            "model": "gpt-realtime",
+        }
+    }
+    const tokenResponse = await fetch("/api/session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
     const data = await tokenResponse.json();
     logServerEvent(data, "fetch_session_token_response");
-
-    if (!data.client_secret?.value) {
+    console.log(data)
+    if (!data.value) {
       logClientEvent(data, "error.no_ephemeral_key");
       console.error("No ephemeral key provided by the server");
       setSessionStatus("DISCONNECTED");
       return null;
     }
 
-    return data.client_secret.value;
+    return data.value;
   };
 
   const connectToRealtime = async () => {

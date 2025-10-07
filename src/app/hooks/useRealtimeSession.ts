@@ -1,14 +1,10 @@
-import { useCallback, useRef, useState, useEffect } from 'react';
-import {
-  RealtimeSession,
-  RealtimeAgent,
-  OpenAIRealtimeWebRTC,
-} from '@openai/agents/realtime';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {OpenAIRealtimeWebRTC, RealtimeAgent, RealtimeSession,} from '@openai/agents/realtime';
 
-import { audioFormatForCodec, applyCodecPreferences } from '../lib/codecUtils';
-import { useEvent } from '../contexts/EventContext';
-import { useHandleSessionHistory } from './useHandleSessionHistory';
-import { SessionStatus } from '../types';
+import {applyCodecPreferences, audioFormatForCodec} from '../lib/codecUtils';
+import {useEvent} from '../contexts/EventContext';
+import {useHandleSessionHistory} from './useHandleSessionHistory';
+import {SessionStatus} from '../types';
 
 export interface RealtimeSessionCallbacks {
   onConnectionChange?: (status: SessionStatus) => void;
@@ -131,22 +127,23 @@ export function useRealtimeSession(callbacks: RealtimeSessionCallbacks = {}) {
       sessionRef.current = new RealtimeSession(rootAgent, {
         transport: new OpenAIRealtimeWebRTC({
           audioElement,
-          // Set preferred codec before offer creation
-          changePeerConnection: async (pc: RTCPeerConnection) => {
-            applyCodec(pc);
-            return pc;
-          },
         }),
-        model: 'gpt-4o-realtime-preview-2025-06-03',
         config: {
-          inputAudioFormat: audioFormat,
-          outputAudioFormat: audioFormat,
-          inputAudioTranscription: {
-            model: 'gpt-4o-mini-transcribe',
+          audio: {
+            input: {
+              transcription: {
+                model: 'whisper-1',
+                language: 'nl',
+              },
+              turnDetection: {
+                type: "semantic_vad",
+                createResponse: true,
+                eagerness: "auto",
+                interruptResponse: true
+              }
+            },
           },
         },
-        outputGuardrails: outputGuardrails ?? [],
-        context: extraContext ?? {},
       });
 
       await sessionRef.current.connect({ apiKey: ek });

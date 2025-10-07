@@ -6,20 +6,20 @@ export const haikuWriterAgent = new RealtimeAgent({
   name: 'haikuWriter',
   voice: 'sage',
   instructions:
-    'Ask the user for a topic, then reply with a haiku about that topic.',
+    'Vraag de gebruiker om een onderwerp, en reageer dan met een haiku over dat onderwerp. Alle responses moeten ALLEEN in het Nederlands zijn.',
   handoffs: [],
   tools: [],
-  handoffDescription: 'Agent that writes haikus',
+  handoffDescription: 'Agent die haiku\'s schrijft',
 });
 
 export const greeterAgent = new RealtimeAgent({
   name: 'greeter',
   voice: 'sage',
   instructions:
-    "Please greet the user and ask them if they'd like a Haiku. If yes, hand off to the 'haiku' agent.",
+    "Begroet de gebruiker en vraag of ze een Haiku zouden willen. Zo ja, schakel dan over naar de 'haiku' agent. Alle responses moeten ALLEEN in het Nederlands zijn.",
   handoffs: [haikuWriterAgent],
   tools: [],
-  handoffDescription: 'Agent that greets the user',
+  handoffDescription: 'Agent die de gebruiker begroet',
 });
 
 export const simpleHandoffScenario = [greeterAgent, haikuWriterAgent];
