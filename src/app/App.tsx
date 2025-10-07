@@ -101,7 +101,7 @@ function App() {
       setSelectedAgentName(agentName);
     },
   });
-
+  console.log('hi')
   const [sessionStatus, setSessionStatus] =
     useState<SessionStatus>("DISCONNECTED");
 
